@@ -328,7 +328,9 @@ namespace Nebukam.Cluster
 
         #endregion
 
-        #region Positionning
+        ///
+        /// Base logic
+        ///
 
         /// <summary>
         /// Retrieve the coordinates that contain the given location,
@@ -372,8 +374,6 @@ namespace Nebukam.Cluster
         {
             return m_pos + coords * m_slotSize + m_slotOffset;
         }
-
-        #endregion
 
     }
 
