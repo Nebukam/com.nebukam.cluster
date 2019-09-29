@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using System.Runtime.CompilerServices;
 using Unity.Mathematics;
-using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace Nebukam.Cluster
 {
@@ -69,8 +64,10 @@ namespace Nebukam.Cluster
         /// Wrap mode over Z axis
         /// </summary>
         WrapMode wrapZ { get; set; }
-        
+
         #endregion
+
+        #region Wrapping
 
         void Clamp(ref ByteTrio coord);
         ByteTrio Clamp(ByteTrio coord);
@@ -78,6 +75,10 @@ namespace Nebukam.Cluster
 
         bool Contains(ref ByteTrio coord);
         bool Contains(ref float3 position);
+
+        #endregion
+
+        #region Positionning
 
         /// <summary>
         /// Retrieve the coordinates that contain the given location,
@@ -93,10 +94,14 @@ namespace Nebukam.Cluster
         /// <param name="coords"></param>
         float3 ComputePosition(ref ByteTrio coords);
 
+        #endregion
+
     }
 
     public struct ClusterBrain : IClusterBrain
     {
+
+        #region Brain core
 
         #region IVertexInfos
 
@@ -199,9 +204,9 @@ namespace Nebukam.Cluster
         {
             set
             {
-                m_slotSize = value.m_slotSize;
-                m_slotAnchor = value.m_anchor;
-                m_slotOffset = value.m_offset;
+                m_slotSize = value.size;
+                m_slotAnchor = value.anchor;
+                m_slotOffset = value.offset;
                 UpdateBounds();
             }
         }
@@ -318,6 +323,8 @@ namespace Nebukam.Cluster
         {
             return m_bounds.Contains(position);
         }
+
+        #endregion
 
         #endregion
 

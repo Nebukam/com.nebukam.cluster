@@ -28,12 +28,7 @@ namespace Nebukam.Cluster
 
     public interface ISlotCluster : IVertex
     {
-
-        /// <summary>
-        /// A Brain image of this SlotCluster
-        /// </summary>
-        IClusterBrain brain { get; }
-
+        
         /// <summary>
         /// Model used for formatting slots
         /// </summary>
@@ -146,7 +141,10 @@ namespace Nebukam.Cluster
         where B : struct, IClusterBrain
     {
 
-        B GetBrain();
+        /// <summary>
+        /// A Brain image of this SlotCluster
+        /// </summary>
+        B brain { get; set; }
 
         void Init(SlotModel clusterSlotModel, B clusterBrain, bool fillCluster);
         void Init(SlotModel clusterSlotModel, ByteTrio clusterSize, bool fillCluster);
@@ -185,9 +183,10 @@ namespace Nebukam.Cluster
             }
         }
 
-        public IClusterBrain brain
+        public B brain
         {
             get { return m_brain; }
+            set { SetBrain( value ); }
         }
 
         protected virtual void SetBrain(B value)
@@ -198,11 +197,6 @@ namespace Nebukam.Cluster
             m_brain.slotModel = m_slotModel;
 
             size = m_brain.clusterSize;
-        }
-
-        public B GetBrain()
-        {
-            return m_brain;
         }
 
         /// <summary>
