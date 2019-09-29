@@ -116,18 +116,11 @@ namespace Nebukam.Cluster
         public override int IndexOf(ByteTrio coord)
         {
             //Compute index based on X Y Z values, according to current plane order.
-            coord.Clamp(ref m_size, ref m_wrapX, ref m_wrapY, ref m_wrapZ);
+            m_brain.Clamp(ref coord);
 
-            if (m_wrapX == WrapMode.NONE && (coord.x < 0 || coord.x >= m_size.x))
+            if (!m_brain.Contains(ref coord))
                 return -1;
 
-            if (m_wrapY == WrapMode.NONE && (coord.y < 0 || coord.y >= m_size.y))
-                return -1;
-
-            if (m_wrapZ == WrapMode.NONE && (coord.z < 0 || coord.z >= m_size.z))
-                return -1;
-
-            //return m_indexOf(coord);
             return coord.x + m_lineLength * coord.y + m_planeLength * coord.z;
         }
 
@@ -230,18 +223,69 @@ namespace Nebukam.Cluster
             return diff;
         }
 
+        #region init methods
 
-
-        public override void Init(ByteTrio clusterSize, SlotModel clusterSlotModel, bool fillCluster)
+        public override void Init(
+            SlotModel clusterSlotModel, 
+            ByteTrio clusterSize, 
+            bool fillCluster)
         {
-            Init(clusterSize, clusterSlotModel, fillCluster, AxisOrder.XYZ);
+            Init(clusterSlotModel, clusterSize, fillCluster, AxisOrder.XYZ);
         }
 
-        public virtual void Init(ByteTrio clusterSize, SlotModel clusterSlotModel, bool fillCluster, AxisOrder clusterPlaneOrder)
+        public virtual void Init(
+            SlotModel clusterSlotModel, 
+            ByteTrio clusterSize, 
+            bool fillCluster, 
+            AxisOrder clusterPlaneOrder)
         {
             planeOrder = clusterPlaneOrder;
-            base.Init(clusterSize, clusterSlotModel, fillCluster);
+            base.Init(clusterSlotModel, clusterSize, fillCluster);
         }
+
+        public override void Init(
+            SlotModel clusterSlotModel, 
+            B clusterBrain, 
+            bool fillCluster)
+        {
+            Init(clusterSlotModel, clusterBrain, fillCluster, AxisOrder.XYZ);
+        }
+
+        public virtual void Init(
+            SlotModel clusterSlotModel,
+            B clusterBrain,
+            bool fillCluster,
+            AxisOrder clusterPlaneOrder)
+        {
+            planeOrder = clusterPlaneOrder;
+            base.Init(clusterSlotModel, clusterBrain, fillCluster);
+        }
+
+        public override void Init(
+            SlotModel clusterSlotModel, 
+            ByteTrio clusterSize, 
+            WrapMode wrapX, 
+            WrapMode wrapY, 
+            WrapMode wrapZ, 
+            bool fillCluster)
+        {
+            Init(clusterSlotModel, clusterSize, wrapX, wrapY, wrapZ, fillCluster, AxisOrder.XYZ);
+        }
+
+        public virtual void Init(
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
+            WrapMode wrapX,
+            WrapMode wrapY,
+            WrapMode wrapZ,
+            bool fillCluster,
+            AxisOrder clusterPlaneOrder)
+        {
+            planeOrder = clusterPlaneOrder;
+            base.Init(clusterSlotModel, clusterSize, wrapX, wrapY, wrapZ, fillCluster);
+        }
+
+        #endregion
 
         /// <summary>
         /// Set the slot occupation at a given coordinate.

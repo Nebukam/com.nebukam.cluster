@@ -53,22 +53,7 @@ namespace Nebukam.Cluster
         /// Clusters finite capacity
         /// </summary>
         int Capacity { get; }
-
-        /// <summary>
-        /// Wrap mode over X axis
-        /// </summary>
-        WrapMode wrapX { get; set; }
-
-        /// <summary>
-        /// Wrap mode over Y axis
-        /// </summary>
-        WrapMode wrapY { get; set; }
-
-        /// <summary>
-        /// Wrap mode over Z axis
-        /// </summary>
-        WrapMode wrapZ { get; set; }
-
+        
         /// <summary>
         /// Return the slot index of the given coordinates
         /// </summary>
@@ -125,8 +110,6 @@ namespace Nebukam.Cluster
         where V : ISlot
     {
 
-        void Init(ByteTrio clusterSize, SlotModel clusterSlotModel, bool fillCluster);
-
         /// <summary>
         /// Set the slot occupation at a given coordinate.
         /// </summary>
@@ -158,12 +141,25 @@ namespace Nebukam.Cluster
 
     }
 
+    public interface ISlotCluster<out V, B> : ISlotCluster<V>
+        where V : ISlot
+        where B : struct, IClusterBrain
+    {
+
+        B GetBrain();
+
+        void Init(SlotModel clusterSlotModel, B clusterBrain, bool fillCluster);
+        void Init(SlotModel clusterSlotModel, ByteTrio clusterSize, bool fillCluster);
+        void Init(SlotModel clusterSlotModel, ByteTrio clusterSize, WrapMode wrapX, WrapMode wrapY, WrapMode wrapZ, bool fillCluster);
+
+    }
+
     /// <summary>
     /// A GridChunk represent a 3D abstract grid with finite slot capacity.
     /// Each slot is stored at a given ByteTrio (x, y, z) location
     /// </summary>
     /// <typeparam name="V"></typeparam>
-    public abstract class SlotCluster<V, B> : Vertex, ISlotCluster<V>, Pooling.IRequireCleanUp
+    public abstract class SlotCluster<V, B> : Vertex, ISlotCluster<V, B>, Pooling.IRequireCleanUp
         where V : Slot, ISlot, new()
         where B : struct, IClusterBrain
     {
@@ -171,16 +167,6 @@ namespace Nebukam.Cluster
         protected internal B m_brain = default;
         protected internal SlotModel m_slotModel = null;
         protected internal ByteTrio m_size = ByteTrio.zero;
-        protected internal WrapMode
-            m_wrapX = WrapMode.NONE,
-            m_wrapY = WrapMode.NONE,
-            m_wrapZ = WrapMode.NONE;
-
-        public IClusterBrain brain
-        {
-            get { return m_brain; }
-        }
-
 
         /// <summary>
         /// Model used for formatting slots
@@ -197,6 +183,26 @@ namespace Nebukam.Cluster
                     OnModelChanged();
                 }
             }
+        }
+
+        public IClusterBrain brain
+        {
+            get { return m_brain; }
+        }
+
+        protected virtual void SetBrain(B value)
+        {
+            m_brain = value;
+
+            m_brain.pos = m_pos;
+            m_brain.slotModel = m_slotModel;
+
+            size = m_brain.clusterSize;
+        }
+
+        public B GetBrain()
+        {
+            return m_brain;
         }
 
         /// <summary>
@@ -249,46 +255,7 @@ namespace Nebukam.Cluster
         public abstract int Count { get; }
         public abstract V this[int index] { get; }
         public abstract int this[IVertex v] { get; }
-
-        /// <summary>
-        /// Wrap mode over X axis
-        /// </summary>
-        public WrapMode wrapX
-        {
-            get { return m_wrapX; }
-            set
-            {
-                m_wrapX = value;
-                m_brain.wrapX = value;
-            }
-        }
-
-        /// <summary>
-        /// Wrap mode over Y axis
-        /// </summary>
-        public WrapMode wrapY
-        {
-            get { return m_wrapY; }
-            set
-            {
-                m_wrapY = value;
-                m_brain.wrapY = value;
-            }
-        }
-
-        /// <summary>
-        /// Wrap mode over Z axis
-        /// </summary>
-        public WrapMode wrapZ
-        {
-            get { return m_wrapZ; }
-            set
-            {
-                m_wrapZ = value;
-                m_brain.wrapZ = value;
-            }
-        }
-
+        
         /// <summary>
         /// Return the slot index of the given coordinates
         /// </summary>
@@ -307,17 +274,61 @@ namespace Nebukam.Cluster
             return m_brain.TryGetCoordOf(location, out coord);
         }
 
-        public virtual void Init(ByteTrio clusterSize, SlotModel clusterSlotModel, bool fillCluster)
+        public virtual void Init(
+            SlotModel clusterSlotModel, 
+            B clusterBrain, 
+            bool fillCluster)
         {
             Clear(true);
 
             m_slotModel = clusterSlotModel;
-            size = clusterSize;
-            m_brain.ExtractProperties(this);
+
+            SetBrain( clusterBrain );
 
             if (fillCluster)
                 Fill();
         }
+
+        public virtual void Init(
+            SlotModel clusterSlotModel, 
+            ByteTrio clusterSize, 
+            bool fillCluster)
+        {
+            Clear(true);
+
+            m_slotModel = clusterSlotModel;
+
+            m_brain.clusterSize = clusterSize;
+            SetBrain(m_brain);
+
+            if (fillCluster)
+                Fill();
+        }
+
+        public virtual void Init(
+            SlotModel clusterSlotModel, 
+            ByteTrio clusterSize, 
+            WrapMode wrapX, 
+            WrapMode wrapY, 
+            WrapMode wrapZ, 
+            bool fillCluster)
+        {
+            Clear(true);
+
+            m_slotModel = clusterSlotModel;
+
+            B b = default;
+            b.wrapX = wrapX;
+            b.wrapY = wrapY;
+            b.wrapZ = wrapZ;
+            b.clusterSize = clusterSize;
+
+            SetBrain(m_brain);
+
+            if (fillCluster)
+                Fill();
+        }
+
 
         /// <summary>
         /// Set the slot occupation at a given coordinate.
@@ -433,9 +444,6 @@ namespace Nebukam.Cluster
             Clear();
             m_slotModel = null;
             m_size = int3(0);
-            m_wrapX = WrapMode.NONE;
-            m_wrapY = WrapMode.NONE;
-            m_wrapZ = WrapMode.NONE;
         }
 
         #endregion

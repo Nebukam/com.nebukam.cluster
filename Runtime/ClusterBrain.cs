@@ -69,21 +69,15 @@ namespace Nebukam.Cluster
         /// Wrap mode over Z axis
         /// </summary>
         WrapMode wrapZ { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cluster"></param>
-        void ExtractProperties(ISlotCluster cluster);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="brain"></param>
-        /// 
-        void ExtractProperties(IClusterBrain brain);
-
+        
         #endregion
+
+        void Clamp(ref ByteTrio coord);
+        ByteTrio Clamp(ByteTrio coord);
+        ByteTrio Clamp(int x, int y, int z);
+
+        bool Contains(ref ByteTrio coord);
+        bool Contains(ref float3 position);
 
         /// <summary>
         /// Retrieve the coordinates that contain the given location,
@@ -101,7 +95,7 @@ namespace Nebukam.Cluster
 
     }
 
-    public partial struct ClusterBrain : IClusterBrain
+    public struct ClusterBrain : IClusterBrain
     {
 
         #region IVertexInfos
@@ -218,51 +212,116 @@ namespace Nebukam.Cluster
             m_bounds = new Bounds(m_pos + s * 0.5f, s);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="cluster"></param>
-        public void ExtractProperties(ISlotCluster cluster)
+        #endregion
+
+        #region Wrapping
+
+        public void Clamp(ref ByteTrio coord)
         {
+            if (m_wrapX != WrapMode.NONE)
+            {
+                if (coord.x < 0)
+                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
+                else if (coord.x >= m_clusterSize.x)
+                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
+            }
 
-            m_pos = cluster.pos;
+            if (m_wrapY != WrapMode.NONE)
+            {
+                if (coord.y < 0)
+                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
+                else if (coord.y >= m_clusterSize.y)
+                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
+            }
 
-            m_wrapX = cluster.wrapX;
-            m_wrapY = cluster.wrapY;
-            m_wrapZ = cluster.wrapZ;
-
-            m_clusterSize = cluster.size;
-            
-            slotModel = cluster.slotModel;
-
+            if (m_wrapZ != WrapMode.NONE)
+            {
+                if (coord.z < 0)
+                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
+                else if (coord.z >= m_clusterSize.y)
+                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
+            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="brain"></param>
-        public void ExtractProperties(IClusterBrain brain)
+        public ByteTrio Clamp(ByteTrio coord)
+        {
+            if (m_wrapX != WrapMode.NONE)
+            {
+                if (coord.x < 0)
+                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
+                else if (coord.x >= m_clusterSize.x)
+                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
+            }
+
+            if (m_wrapY != WrapMode.NONE)
+            {
+                if (coord.y < 0)
+                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
+                else if (coord.y >= m_clusterSize.y)
+                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
+            }
+
+            if (m_wrapZ != WrapMode.NONE)
+            {
+                if (coord.z < 0)
+                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
+                else if (coord.z >= m_clusterSize.y)
+                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
+            }
+
+            return coord;
+        }
+
+        public ByteTrio Clamp(int x, int y, int z)
         {
 
-            m_pos = brain.pos;
+            if (m_wrapX != WrapMode.NONE)
+            {
+                if (x < 0)
+                    x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (x % m_clusterSize.x) : 0);
+                else if (x >= m_clusterSize.x)
+                    x = (byte)(m_wrapX == WrapMode.WRAP ? x % m_clusterSize.x : m_clusterSize.x - 1);
+            }
 
-            m_wrapX = brain.wrapX;
-            m_wrapY = brain.wrapY;
-            m_wrapZ = brain.wrapZ;
+            if (m_wrapY != WrapMode.NONE)
+            {
+                if (y < 0)
+                    y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (y % m_clusterSize.y) : 0);
+                else if (y >= m_clusterSize.y)
+                    y = (byte)(m_wrapY == WrapMode.WRAP ? y % m_clusterSize.y : m_clusterSize.y - 1);
+            }
 
-            m_clusterSize = brain.clusterSize;
+            if (m_wrapZ != WrapMode.NONE)
+            {
+                if (z < 0)
+                    z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (z % m_clusterSize.z) : 0);
+                else if (z >= m_clusterSize.y)
+                    z = (byte)(m_wrapZ == WrapMode.WRAP ? z % m_clusterSize.z : m_clusterSize.z - 1);
+            }
 
-            m_slotSize = brain.slotSize;
-            m_slotOffset = brain.slotOffset;
-            m_slotAnchor = brain.slotAnchor;
+            return new ByteTrio(x, y, z);
+        }
 
-            UpdateBounds();
+        public bool Contains(ref ByteTrio coord)
+        {
+            if (m_wrapX == WrapMode.NONE && (coord.x < 0 || coord.x >= m_clusterSize.x))
+                return false;
+            else if (m_wrapY == WrapMode.NONE && (coord.y < 0 || coord.y >= m_clusterSize.y))
+                return false;
+            else if (m_wrapZ == WrapMode.NONE && (coord.z < 0 || coord.z >= m_clusterSize.z))
+                return false;
 
+            return true;
+        }
+
+        public bool Contains(ref float3 position)
+        {
+            return m_bounds.Contains(position);
         }
 
         #endregion
 
-        #region ClusterBrain methods
+        #region Positionning
 
         /// <summary>
         /// Retrieve the coordinates that contain the given location,
@@ -292,8 +351,7 @@ namespace Nebukam.Cluster
                 posY = (int)((loc.y - modY) / m_slotSize.y),
                 posZ = (int)((loc.z - modZ) / m_slotSize.z);
 
-            coord = new ByteTrio(posX, posY, posZ);
-            coord.Clamp(ref m_clusterSize, ref m_wrapX, ref m_wrapY, ref m_wrapZ);
+            coord = Clamp(posX, posY, posZ);
             return true;
         }
 

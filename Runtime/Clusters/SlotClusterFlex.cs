@@ -63,13 +63,12 @@ namespace Nebukam.Cluster
         /// <returns></returns>
         public override int IndexOf(ByteTrio coord)
         {
-            coord.Clamp(ref m_size, ref m_wrapX, ref m_wrapY, ref m_wrapZ);
-            if (m_slots.TryGetValue(coord, out ISlot slot))
+            if (m_slots.TryGetValue(m_brain.Clamp(coord), out ISlot slot))
                 return m_slotList.IndexOf(slot as V);
 
             return -1;
         }
-        
+
         protected override int3 OnSizeChanged(ByteTrio oldSize)
         {
             int3 diff = base.OnSizeChanged(oldSize);
@@ -83,22 +82,22 @@ namespace Nebukam.Cluster
             V slot;
             ByteTrio coord;
             SlotIndex s;
-            int 
-                sizeX = oldSize.x, 
-                sizeY = oldSize.y, 
+            int
+                sizeX = oldSize.x,
+                sizeY = oldSize.y,
                 sizeZ = oldSize.z;
-            
-            for(int i  = 0, count = m_slotList.Count; i < count; i++)
+
+            for (int i = 0, count = m_slotList.Count; i < count; i++)
             {
                 slot = m_slotList[i];
                 coord = slot.m_coordinates;
 
                 if (coord.x >= sizeX || coord.y >= sizeY || coord.z >= sizeZ)
-                    outgoing.Add(new SlotIndex(i,slot));
-                
+                    outgoing.Add(new SlotIndex(i, slot));
+
             }
 
-            for(int i = 0, count = outgoing.Count; i < count; i++)
+            for (int i = 0, count = outgoing.Count; i < count; i++)
             {
                 s = outgoing[i];
                 m_slotList.RemoveAt(s.index);
@@ -208,8 +207,7 @@ namespace Nebukam.Cluster
         /// <remarks>Input coordinates are wrapped per-axis using each of the cluster's individual wrap mode.</remarks>
         public override bool TryGet(ByteTrio coord, out ISlot slot)
         {
-            coord.Clamp(ref m_size, ref m_wrapX, ref m_wrapY, ref m_wrapZ);
-            return m_slots.TryGetValue(coord, out slot);
+            return m_slots.TryGetValue(m_brain.Clamp(coord), out slot);
         }
 
         /// <summary>
@@ -223,9 +221,7 @@ namespace Nebukam.Cluster
         /// <remarks>Input coordinates are wrapped per-axis using each of the cluster's individual wrap mode.</remarks>
         public override bool TryGet(int x, int y, int z, out ISlot slot)
         {
-            ByteTrio coord = new ByteTrio(x, y, z);
-            coord.Clamp(ref m_size, ref m_wrapX, ref m_wrapY, ref m_wrapZ);
-            return m_slots.TryGetValue(new ByteTrio(x, y, z), out slot);
+            return m_slots.TryGetValue(m_brain.Clamp(x, y, z), out slot);
         }
 
         /// <summary>
