@@ -191,10 +191,10 @@ namespace Nebukam.Cluster
 
         protected virtual void SetBrain(B value)
         {
-            m_brain = value;
+            value.pos = m_pos;
+            value.slotModel = m_slotModel;
 
-            m_brain.pos = m_pos;
-            m_brain.slotModel = m_slotModel;
+            m_brain = value;
 
             size = m_brain.clusterSize;
         }

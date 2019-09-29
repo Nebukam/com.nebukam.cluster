@@ -233,22 +233,23 @@ namespace Nebukam.Cluster
             Init(clusterSlotModel, clusterSize, fillCluster, AxisOrder.XYZ);
         }
 
-        public virtual void Init(
-            SlotModel clusterSlotModel, 
-            ByteTrio clusterSize, 
-            bool fillCluster, 
-            AxisOrder clusterPlaneOrder)
-        {
-            planeOrder = clusterPlaneOrder;
-            base.Init(clusterSlotModel, clusterSize, fillCluster);
-        }
-
         public override void Init(
-            SlotModel clusterSlotModel, 
-            B clusterBrain, 
+            SlotModel clusterSlotModel,
+            B clusterBrain,
             bool fillCluster)
         {
             Init(clusterSlotModel, clusterBrain, fillCluster, AxisOrder.XYZ);
+        }
+
+        public override void Init(
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
+            WrapMode wrapX,
+            WrapMode wrapY,
+            WrapMode wrapZ,
+            bool fillCluster)
+        {
+            Init(clusterSlotModel, clusterSize, wrapX, wrapY, wrapZ, fillCluster, AxisOrder.XYZ);
         }
 
         public virtual void Init(
@@ -261,15 +262,15 @@ namespace Nebukam.Cluster
             base.Init(clusterSlotModel, clusterBrain, fillCluster);
         }
 
-        public override void Init(
-            SlotModel clusterSlotModel, 
-            ByteTrio clusterSize, 
-            WrapMode wrapX, 
-            WrapMode wrapY, 
-            WrapMode wrapZ, 
-            bool fillCluster)
+
+        public virtual void Init(
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
+            bool fillCluster,
+            AxisOrder clusterPlaneOrder)
         {
-            Init(clusterSlotModel, clusterSize, wrapX, wrapY, wrapZ, fillCluster, AxisOrder.XYZ);
+            planeOrder = clusterPlaneOrder;
+            base.Init(clusterSlotModel, clusterSize, fillCluster);
         }
 
         public virtual void Init(

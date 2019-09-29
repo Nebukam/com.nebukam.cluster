@@ -184,7 +184,7 @@ MonoBehaviour:
     x: 5
     y: 5
     z: 5
-  debugRadius: 0.05
+  debugRadius: 0.01
   slotSize:
     x: 1
     y: 1

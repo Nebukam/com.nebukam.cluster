@@ -1,20 +1,20 @@
 ﻿using Nebukam;
-using Nebukam.Slate;
+using Nebukam.Cluster;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using UnityEngine;
 
-public class SlateSetup : MonoBehaviour
+public class ClusterSetup : MonoBehaviour
 {
 
-    public int3 size;
+    public int3 size = int3(1,1,1);
     public float debugRadius = 0.01f;
     public float3 slotSize = float3(1f);
     public float3 slotAnchor = float3(0.5f);
 
     public Transform positionTester;
 
-    protected SlotCluster<Slot> m_cluster;
+    protected SlotCluster<Slot, ClusterBrain> m_cluster;
     protected SlotModel m_model = new SlotModel();
 
     private void Awake()
@@ -22,8 +22,8 @@ public class SlateSetup : MonoBehaviour
         m_model.size = slotSize;
         m_model.anchor = slotAnchor;
 
-        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot>>();
-        m_cluster.Init(size, m_model, true);
+        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot, ClusterBrain>>();
+        m_cluster.Init(m_model, size, true);
     }
 
     private void Update()

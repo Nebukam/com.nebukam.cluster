@@ -1,109 +1,19 @@
-﻿using System.Runtime.CompilerServices;
-using Unity.Burst;
-using Unity.Mathematics;
+﻿using Unity.Burst;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
+using Nebukam.Utils;
 
 namespace Nebukam.Cluster
 {
 
-    /// <summary>
-    /// An IClusterBrain is reponsible for handling abstract positioning in a cluster space.
-    /// This make it easy to manipulate elements as if they were in a cluster, and makes
-    /// job-related computation easy to handle.
-    /// </summary>
-    public interface IClusterBrain : IVertexInfos
-    {
-
-        #region IClusterBrain properties
-
-        /// <summary>
-        /// Model used for formatting slots
-        /// </summary>
-        SlotModel slotModel { set; }
-
-        /// <summary>
-        /// Slot size
-        /// </summary>
-        float3 slotSize { get; set; }
-
-        /// <summary>
-        /// Slot size
-        /// </summary>
-        float3 slotAnchor { get; set; }
-
-        /// <summary>
-        /// Slot size
-        /// </summary>
-        float3 slotOffset { get; }
-
-        /// <summary>
-        /// Cluster's slot size
-        /// </summary>
-        ByteTrio clusterSize { get; set; }
-
-        /// <summary>
-        /// Cluster's bounds
-        /// </summary>
-        Bounds bounds { get; }
-
-        /// <summary>
-        /// Clusters max capacity
-        /// </summary>
-        int Capacity { get; }
-
-        /// <summary>
-        /// Wrap mode over X axis
-        /// </summary>
-        WrapMode wrapX { get; set; }
-
-        /// <summary>
-        /// Wrap mode over Y axis
-        /// </summary>
-        WrapMode wrapY { get; set; }
-
-        /// <summary>
-        /// Wrap mode over Z axis
-        /// </summary>
-        WrapMode wrapZ { get; set; }
-
-        #endregion
-
-        #region Wrapping
-
-        void Clamp(ref ByteTrio coord);
-        ByteTrio Clamp(ByteTrio coord);
-        ByteTrio Clamp(int x, int y, int z);
-
-        bool Contains(ref ByteTrio coord);
-        bool Contains(ref float3 position);
-
-        #endregion
-
-        #region Positionning
-
-        /// <summary>
-        /// Retrieve the coordinates that contain the given location,
-        /// based on cluster location & slot's size
-        /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        bool TryGetCoordOf(float3 location, out ByteTrio coord);
-
-        /// <summary>
-        /// Return the world-space projection of the given coordinates, as projected by this cluster.
-        /// </summary>
-        /// <param name="coords"></param>
-        float3 ComputePosition(ref ByteTrio coords);
-
-        #endregion
-
-    }
-
     [BurstCompile]
-    public struct ClusterBrain : IClusterBrain
+    public struct CylindricBrain : IClusterBrain
     {
 
-        #region Brain core
+
+        #region Brain core - copy/pasted from ClusterBrain.cs
 
         #region IVertexInfos
 
@@ -212,13 +122,6 @@ namespace Nebukam.Cluster
                 UpdateBounds();
             }
         }
-
-        private void UpdateBounds()
-        {
-            float3 s = m_clusterSize * m_slotSize;
-            m_bounds = new Bounds(m_pos + s * 0.5f, s);
-        }
-
         #endregion
 
         #region Wrapping
@@ -331,8 +234,16 @@ namespace Nebukam.Cluster
         #endregion
 
         ///
-        /// Base logic
+        /// Cylindric logic
         ///
+
+        private void UpdateBounds()
+        {
+            float d = (((m_slotSize.x * m_clusterSize.x) / Maths.TAU) + m_slotSize.z * m_clusterSize.z )* 2f;
+            float3 p = m_pos;
+            p.y += (m_slotSize.y * m_clusterSize.y) * 0.5f;
+            m_bounds = new Bounds(p, float3(d, m_clusterSize.y * m_slotSize.y, d));
+        }
 
         /// <summary>
         /// Retrieve the coordinates that contain the given location,
@@ -343,7 +254,7 @@ namespace Nebukam.Cluster
         public bool TryGetCoordOf(float3 location, out ByteTrio coord)
         {
 
-            if (!bounds.Contains(location))
+            if (!m_bounds.Contains(location))
             {
                 coord = ByteTrio.zero;
                 return false;
@@ -351,6 +262,22 @@ namespace Nebukam.Cluster
 
             float3
                 loc = location - pos;
+
+            float
+                dist = length(float2(loc.x, loc.z)),
+                r = (m_slotSize.x * m_clusterSize.x) / Maths.TAU,
+                rMax = r + m_slotSize.z * m_clusterSize.z;
+
+            if(dist < r || dist > rMax)
+            {
+                coord = ByteTrio.zero;
+                return false;
+            }
+
+            float a = atan2(loc.x, loc.z);
+            a = a < 0f ? a + Maths.TAU : a;
+            loc.x = (m_slotSize.x * m_clusterSize.x) * ( a / Maths.TAU );
+            loc.z = dist - r;
 
             float
                 modX = loc.x % m_slotSize.x,
@@ -361,9 +288,10 @@ namespace Nebukam.Cluster
                 posX = (int)((loc.x - modX) / m_slotSize.x),
                 posY = (int)((loc.y - modY) / m_slotSize.y),
                 posZ = (int)((loc.z - modZ) / m_slotSize.z);
-
+            
             coord = Clamp(posX, posY, posZ);
             return true;
+
         }
 
         /// <summary>
@@ -374,9 +302,19 @@ namespace Nebukam.Cluster
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public float3 ComputePosition(ref ByteTrio coords)
         {
-            return m_pos + coords * m_slotSize + m_slotOffset;
+
+            float 
+                r = (m_slotSize.x * m_clusterSize.x) / Maths.TAU,
+                a = (Maths.TAU / m_clusterSize.x ) * coords.x;
+
+            float3 
+                p = coords * m_slotSize + m_slotOffset,
+                pt = float3(0f, p.y, r + m_slotSize.z * coords.z);
+
+            pt = Maths.RotateAroundPivot(pt, float3(0f, p.y, 0f), float3(0f, a, 0f));
+
+            return m_pos + pt;
         }
 
     }
-
 }
