@@ -29,32 +29,32 @@ namespace Nebukam.Cluster
     /// A GridChunk represent a 3D abstract grid with finite slot capacity.
     /// Each slot is stored at a given ByteTrio (x, y, z) location
     /// </summary>
-    /// <typeparam name="V"></typeparam>
-    public class SlotClusterFlex<V, B> : SlotCluster<V, B>
-        where V : Slot, ISlot, new()
-        where B : struct, IClusterBrain
+    /// <typeparam name="T_SLOT"></typeparam>
+    public class SlotClusterFlex<T_SLOT, T_BRAIN> : SlotCluster<T_SLOT, T_BRAIN>
+        where T_SLOT : Slot, ISlot, new()
+        where T_BRAIN : struct, IClusterBrain
     {
 
         internal struct SlotIndex
         {
             public int index;
-            public V slot;
-            public SlotIndex(int i, V s)
+            public T_SLOT slot;
+            public SlotIndex(int i, T_SLOT s)
             {
                 index = i;
                 slot = s;
             }
         }
 
-        protected internal List<V> m_slotList = new List<V>();
+        protected internal List<T_SLOT> m_slotList = new List<T_SLOT>();
         protected internal Dictionary<ByteTrio, ISlot> m_slots = new Dictionary<ByteTrio, ISlot>();
 
         /// <summary>
         /// Number of slots in the cluster
         /// </summary>
         public override int Count { get { return m_slotList.Count; } }
-        public override V this[int index] { get { return m_slotList[index]; } }
-        public override int this[IVertex v] { get { return m_slotList.IndexOf((V)v); } }
+        public override T_SLOT this[int index] { get { return m_slotList[index]; } }
+        public override int this[IVertex v] { get { return m_slotList.IndexOf((T_SLOT)v); } }
 
         /// <summary>
         /// Return the slot index of the given coordinates
@@ -64,7 +64,7 @@ namespace Nebukam.Cluster
         public override int IndexOf(ByteTrio coord)
         {
             if (m_slots.TryGetValue(m_brain.Clamp(coord), out ISlot slot))
-                return m_slotList.IndexOf(slot as V);
+                return m_slotList.IndexOf(slot as T_SLOT);
 
             return -1;
         }
@@ -79,7 +79,7 @@ namespace Nebukam.Cluster
             //TOOD : Find a more elegant and efficient way to resize.
 
             List<SlotIndex> outgoing = new List<SlotIndex>();
-            V slot;
+            T_SLOT slot;
             ByteTrio coord;
             SlotIndex s;
             int
@@ -117,10 +117,10 @@ namespace Nebukam.Cluster
         /// <param name="slot"></param>
         /// <param name="releaseExisting"></param>
         /// <returns></returns>
-        public override V Set(ByteTrio coord, ISlot slot, bool releaseExisting = false)
+        public override T_SLOT Set(ByteTrio coord, ISlot slot, bool releaseExisting = false)
         {
 
-            V vSlot = slot as V;
+            T_SLOT vSlot = slot as T_SLOT;
 
 #if UNITY_EDITOR
             if (vSlot == null)
@@ -144,7 +144,7 @@ namespace Nebukam.Cluster
                 if (existingSlot == vSlot)
                     return vSlot;
 
-                V vExistingSlot = existingSlot as V;
+                T_SLOT vExistingSlot = existingSlot as T_SLOT;
                 m_slotList.Remove(vExistingSlot);
                 OnSlotRemoved(vExistingSlot);
 
@@ -165,13 +165,13 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        public override V Add(ByteTrio coord)
+        public override T_SLOT Add(ByteTrio coord)
         {
 
             if (m_slots.TryGetValue(coord, out ISlot dslot))
-                return dslot as V;
+                return dslot as T_SLOT;
 
-            V slot = Pooling.Pool.Rent<V>();
+            T_SLOT slot = Pooling.Pool.Rent<T_SLOT>();
             slot.m_coordinates = coord;
             m_slotList.Add(slot);
             OnSlotAdded(slot);
@@ -184,12 +184,12 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        public override V Remove(ByteTrio coord)
+        public override T_SLOT Remove(ByteTrio coord)
         {
-            V vSlot;
+            T_SLOT vSlot;
             if (m_slots.TryGetValue(coord, out ISlot slot))
             {
-                vSlot = slot as V;
+                vSlot = slot as T_SLOT;
                 m_slotList.Remove(vSlot);
                 m_slots.Remove(coord);
                 return vSlot;
@@ -228,7 +228,7 @@ namespace Nebukam.Cluster
         /// Callback when a slot is added to the cluster.
         /// </summary>
         /// <param name="slot"></param>
-        protected override void OnSlotAdded(V slot)
+        protected override void OnSlotAdded(T_SLOT slot)
         {
             ByteTrio coord = slot.m_coordinates;
             m_slots[coord] = slot;
@@ -240,7 +240,7 @@ namespace Nebukam.Cluster
         /// </summary>
         protected override void UpdatePositions()
         {
-            V slot;
+            T_SLOT slot;
             for (int i = 0, count = m_slotList.Count; i < count; i++)
             {
                 slot = m_slotList[i];
@@ -287,7 +287,7 @@ namespace Nebukam.Cluster
         /// </summary>
         public override void Clear(bool release = false)
         {
-            V slot;
+            T_SLOT slot;
             for (int i = 0, count = m_slotList.Count; i < count; i++)
             {
                 slot = m_slotList[i];
@@ -339,7 +339,7 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public override V GetNearestVertex(IVertex v)
+        public override T_SLOT GetNearestVertex(IVertex v)
         {
             int index = GetNearestVertexIndex(v);
             if (index == -1) { return null; }
@@ -377,7 +377,7 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public override V GetNearestVertex(float3 v)
+        public override T_SLOT GetNearestVertex(float3 v)
         {
             int index = GetNearestVertexIndex(v);
             if (index == -1) { return null; }

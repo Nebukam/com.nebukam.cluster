@@ -28,15 +28,15 @@ namespace Nebukam.Cluster
     /// A GridChunk represent a 3D abstract grid with finite slot capacity.
     /// Each slot is stored at a given ByteTrio (x, y, z) location
     /// </summary>
-    /// <typeparam name="V"></typeparam>
-    public class SlotClusterFixed<V, B> : SlotCluster<V, B>, IPlanarOrder
-        where V : Slot, ISlot, new()
-        where B : struct, IClusterBrain
+    /// <typeparam name="T_SLOT"></typeparam>
+    public class SlotClusterFixed<T_SLOT, T_BRAIN> : SlotCluster<T_SLOT, T_BRAIN>, IPlanarOrder
+        where T_SLOT : Slot, ISlot, new()
+        where T_BRAIN : struct, IClusterBrain
     {
 
         protected internal delegate int ComputeIndexOf(ByteTrio coord);
 
-        protected internal V[] m_slotList = null;
+        protected internal T_SLOT[] m_slotList = null;
         protected internal AxisOrder m_planeOrder = AxisOrder.XYZ;
         protected internal ComputeIndexOf
             m_indexOf,
@@ -54,8 +54,8 @@ namespace Nebukam.Cluster
         /// Number of slots in the cluster
         /// </summary>
         public override int Count { get { return m_slotList.Length; } }
-        public override V this[int index] { get { return m_slotList[index]; } }
-        public override int this[IVertex v] { get { return IndexOf((v as V).m_coordinates); } }
+        public override T_SLOT this[int index] { get { return m_slotList[index]; } }
+        public override int this[IVertex v] { get { return IndexOf((v as T_SLOT).m_coordinates); } }
 
         /// <summary>
         /// Plane order defined the order in which slots are ordered.
@@ -167,16 +167,16 @@ namespace Nebukam.Cluster
 
             if (m_slotList == null)
             {
-                m_slotList = new V[newVolume];
+                m_slotList = new T_SLOT[newVolume];
                 return diff;
             }
 
             if (diff.x == 0 && diff.y == 0 && diff.z == 0)
                 return diff;
 
-            V oldSlot;
-            V[] oldList = m_slotList;
-            m_slotList = new V[newVolume];
+            T_SLOT oldSlot;
+            T_SLOT[] oldList = m_slotList;
+            m_slotList = new T_SLOT[newVolume];
 
             int
                 sizeX = oldSize.x,
@@ -235,7 +235,7 @@ namespace Nebukam.Cluster
 
         public override void Init(
             SlotModel clusterSlotModel,
-            B clusterBrain,
+            T_BRAIN clusterBrain,
             bool fillCluster)
         {
             Init(clusterSlotModel, clusterBrain, fillCluster, AxisOrder.XYZ);
@@ -254,7 +254,7 @@ namespace Nebukam.Cluster
 
         public virtual void Init(
             SlotModel clusterSlotModel,
-            B clusterBrain,
+            T_BRAIN clusterBrain,
             bool fillCluster,
             AxisOrder clusterPlaneOrder)
         {
@@ -295,7 +295,7 @@ namespace Nebukam.Cluster
         /// <param name="slot"></param>
         /// <param name="releaseExisting"></param>
         /// <returns></returns>
-        public override V Set(ByteTrio coord, ISlot slot, bool releaseExisting = false)
+        public override T_SLOT Set(ByteTrio coord, ISlot slot, bool releaseExisting = false)
         {
 
             int index = IndexOf(coord);
@@ -303,7 +303,7 @@ namespace Nebukam.Cluster
             if (index == -1)
                 return null;
 
-            V vSlot = slot as V;
+            T_SLOT vSlot = slot as T_SLOT;
 
 #if UNITY_EDITOR
             if (vSlot == null)
@@ -318,7 +318,7 @@ namespace Nebukam.Cluster
                     Remove(vSlot.m_coordinates); //a slot can only exists at a single coordinate
             }
 
-            V existingSlot = m_slotList[index];
+            T_SLOT existingSlot = m_slotList[index];
 
             if (existingSlot != null)
             {
@@ -346,7 +346,7 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        public override V Add(ByteTrio coord)
+        public override T_SLOT Add(ByteTrio coord)
         {
 
             int index = IndexOf(coord);
@@ -354,11 +354,11 @@ namespace Nebukam.Cluster
             if (index == -1)
                 return null;
 
-            V slot = m_slotList[index];
+            T_SLOT slot = m_slotList[index];
             if (slot != null)
                 return slot;
 
-            slot = Pooling.Pool.Rent<V>();
+            slot = Pooling.Pool.Rent<T_SLOT>();
             slot.m_coordinates = coord;
             m_slotList[index] = slot;
             OnSlotAdded(slot);
@@ -371,14 +371,14 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        public override V Remove(ByteTrio coord)
+        public override T_SLOT Remove(ByteTrio coord)
         {
             int index = IndexOf(coord);
 
             if (index == -1)
                 return null;
 
-            V slot = m_slotList[index];
+            T_SLOT slot = m_slotList[index];
             m_slotList[index] = null;
             return slot;
         }
@@ -432,7 +432,7 @@ namespace Nebukam.Cluster
         /// </summary>
         protected override void UpdatePositions()
         {
-            V slot;
+            T_SLOT slot;
             for (int i = 0, count = m_slotList.Length; i < count; i++)
             {
                 slot = m_slotList[i];
@@ -456,7 +456,7 @@ namespace Nebukam.Cluster
             ByteTrio coords;
             float3 o = pos, origin = pos, slotSize = m_slotModel.size;
             int index;
-            V slot;
+            T_SLOT slot;
 
             for (int z = 0; z < sizeZ; z++) // volume
             {
@@ -485,7 +485,7 @@ namespace Nebukam.Cluster
             if (m_slotList == null)
                 return;
 
-            V slot;
+            T_SLOT slot;
             for (int i = 0, count = m_slotList.Length; i < count; i++)
             {
                 slot = m_slotList[i];
@@ -540,7 +540,7 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public override V GetNearestVertex(IVertex v)
+        public override T_SLOT GetNearestVertex(IVertex v)
         {
             int index = GetNearestVertexIndex(v);
             if (index == -1) { return null; }
@@ -578,7 +578,7 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
-        public override V GetNearestVertex(float3 v)
+        public override T_SLOT GetNearestVertex(float3 v)
         {
             int index = GetNearestVertexIndex(v);
             if (index == -1) { return null; }

@@ -101,8 +101,8 @@ namespace Nebukam.Cluster
 
     }
 
-    public interface ISlotCluster<out V> : IClearableVertexGroup<V>, ISlotCluster
-        where V : ISlot
+    public interface ISlotCluster<out T_SLOT> : IClearableVertexGroup<T_SLOT>, ISlotCluster
+        where T_SLOT : ISlot
     {
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Nebukam.Cluster
         /// <param name="slot"></param>
         /// <param name="releaseExisting"></param>
         /// <returns></returns>
-        V Set(ByteTrio coord, ISlot slot, bool releaseExisting = false);
+        T_SLOT Set(ByteTrio coord, ISlot slot, bool releaseExisting = false);
 
         /// <summary>
         /// Create a slot at the given coordinates and return it.
@@ -120,14 +120,14 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        V Add(ByteTrio coord);
+        T_SLOT Add(ByteTrio coord);
 
         /// <summary>
         /// Remove the slot at the given coordinates and returns it.
         /// </summary>
         /// <param name="coord"></param>
         /// <returns></returns>
-        V Remove(ByteTrio coord);
+        T_SLOT Remove(ByteTrio coord);
 
         /// <summary>
         /// Fills all empty slots in this cluster with.
@@ -136,17 +136,17 @@ namespace Nebukam.Cluster
 
     }
 
-    public interface ISlotCluster<out V, B> : ISlotCluster<V>
-        where V : ISlot
-        where B : struct, IClusterBrain
+    public interface ISlotCluster<out T_SLOT, T_SLOT_INFOS> : ISlotCluster<T_SLOT>
+        where T_SLOT : ISlot
+        where T_SLOT_INFOS : struct, IClusterBrain
     {
 
         /// <summary>
         /// A Brain image of this SlotCluster
         /// </summary>
-        B brain { get; set; }
+        T_SLOT_INFOS brain { get; set; }
 
-        void Init(SlotModel clusterSlotModel, B clusterBrain, bool fillCluster);
+        void Init(SlotModel clusterSlotModel, T_SLOT_INFOS clusterBrain, bool fillCluster);
         void Init(SlotModel clusterSlotModel, ByteTrio clusterSize, bool fillCluster);
         void Init(SlotModel clusterSlotModel, ByteTrio clusterSize, WrapMode wrapX, WrapMode wrapY, WrapMode wrapZ, bool fillCluster);
 

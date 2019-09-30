@@ -18,20 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Unity.Mathematics;
 
 namespace Nebukam.Cluster
 {
 
-    public interface ISlotInfos<S>
-        where S : ISlot
+    public interface ISlotInfos<T_SLOT> : IVertexInfos
+        where T_SLOT : ISlot
     {
         int index { get; set; }
         ByteTrio coord { get; set; }
-        void Capture(S slot);
+        void Capture(T_SLOT slot);
     }
 
     public struct SlotInfos : ISlotInfos<ISlot>
     {
+
+        #region IVertexInfos
+
+        public float3 m_pos;
+
+        public float3 pos
+        {
+            get { return m_pos; }
+            set { m_pos = value; }
+        }
+
+        #endregion
+
+        #region ISlotInfos
+
         public int i;
         public ByteTrio c;
 
@@ -51,6 +67,8 @@ namespace Nebukam.Cluster
         {
 
         }
+
+        #endregion
 
     }
 

@@ -29,23 +29,34 @@ namespace Nebukam.Cluster
     /// Handle the mapping of coordinate to index.
     /// Since NativeHashMap is super slow on the main thread, it has a dedicated job.
     /// </summary>
-    /// <typeparam name="S"></typeparam>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T_SLOT"></typeparam>
+    /// <typeparam name="T_SLOT_INFOS"></typeparam>
     [BurstCompile]
-    public struct ClusterMappingJob<S, T> : IJob
-        where S : Slot, ISlot
-        where T : struct, ISlotInfos<S>
+    public struct ClusterMappingJob<T_SLOT, T_SLOT_INFOS, T_BRAIN> : IJob
+        where T_SLOT : Slot, ISlot
+        where T_SLOT_INFOS : struct, ISlotInfos<T_SLOT>
+        where T_BRAIN : struct, IClusterBrain
     {
 
         [ReadOnly]
-        public NativeArray<T> m_inputSlotInfos;
-
+        public T_BRAIN m_brain;
+        public NativeArray<T_SLOT_INFOS> m_inputSlotInfos;
         public NativeHashMap<ByteTrio, int> m_coordinateMap;
 
         public void Execute()
         {
+            T_SLOT_INFOS infos;
+            ByteTrio coords;
             for (int i = 0, count = m_inputSlotInfos.Length; i < count; i++)
-                m_coordinateMap.TryAdd(m_inputSlotInfos[i].coord, i);
+            {
+                infos = m_inputSlotInfos[i];
+                coords = infos.coord;
+
+                infos.pos = m_brain.ComputePosition(ref coords);
+
+                m_coordinateMap.TryAdd(coords, i);
+                m_inputSlotInfos[i] = infos;
+            }
         }
 
     }

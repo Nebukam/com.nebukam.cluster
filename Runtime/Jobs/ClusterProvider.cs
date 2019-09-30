@@ -26,27 +26,29 @@ using Unity.Collections;
 namespace Nebukam.Cluster
 {
 
-    public interface IClusterProvider<S, T> : IProcessor
-        where S : ISlot
-        where T : struct, ISlotInfos<S>
+    public interface IClusterProvider<T_SLOT, T_SLOT_INFOS, T_BRAIN> : IProcessor
+        where T_SLOT : ISlot
+        where T_SLOT_INFOS : struct, ISlotInfos<T_SLOT>
+        where T_BRAIN : struct, IClusterBrain
     {
-        ISlotCluster<S> slotCluster { get; set; }
-        List<S> lockedSlots { get; }
-        NativeArray<T> outputSlotInfos { get; }
+        ISlotCluster<T_SLOT, T_BRAIN> slotCluster { get; set; }
+        List<T_SLOT> lockedSlots { get; }
+        NativeArray<T_SLOT_INFOS> outputSlotInfos { get; }
         NativeHashMap<ByteTrio, int> outputSlotCoordinateMap { get; }
     }
 
-    public class ClusterProvider<S, T> : Processor<ClusterMappingJob<S, T>>, IClusterProvider<S, T>
+    public class ClusterProvider<S, T, B> : Processor<ClusterMappingJob<S, T, B>>, IClusterProvider<S, T, B>
         where S : Slot, ISlot
         where T : struct, ISlotInfos<S>
+        where B : struct, IClusterBrain
     {
 
-        protected ISlotCluster<S> m_slotCluster = null;
+        protected ISlotCluster<S, B> m_slotCluster = null;
         protected List<S> m_lockedSlots = new List<S>();
         protected NativeArray<T> m_outputSlotInfos = new NativeArray<T>(0, Allocator.Persistent);
         protected NativeHashMap<ByteTrio, int> m_outputSlotCoordMap = new NativeHashMap<ByteTrio, int>(0, Allocator.Persistent);
 
-        public ISlotCluster<S> slotCluster
+        public ISlotCluster<S, B> slotCluster
         {
             get { return m_slotCluster; }
             set { m_slotCluster = value; }
@@ -63,7 +65,7 @@ namespace Nebukam.Cluster
             for (int i = 0; i < count; i++) { m_lockedSlots.Add(m_slotCluster[i]); }
         }
 
-        protected override void Prepare(ref ClusterMappingJob<S, T> job, float delta)
+        protected override void Prepare(ref ClusterMappingJob<S, T, B> job, float delta)
         {
 
             int slotCount = m_lockedSlots.Count;
@@ -92,18 +94,23 @@ namespace Nebukam.Cluster
 
                 slotInfos.index = i;
                 slotInfos.coord = slot.m_coordinates;
+
                 slotInfos.Capture(slot);
 
                 m_outputSlotInfos[i] = slotInfos;
 
             }
 
+            job.m_brain = m_slotCluster.brain;
             job.m_inputSlotInfos = m_outputSlotInfos;
             job.m_coordinateMap = m_outputSlotCoordMap;
 
         }
 
-        protected override void Apply(ref ClusterMappingJob<S, T> job) { }
+        protected override void Apply(ref ClusterMappingJob<S, T, B> job)
+        {
+
+        }
 
         protected override void InternalUnlock() { }
 
