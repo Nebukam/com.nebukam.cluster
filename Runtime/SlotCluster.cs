@@ -28,7 +28,7 @@ namespace Nebukam.Cluster
 
     public interface ISlotCluster : IVertex
     {
-        
+
         /// <summary>
         /// Model used for formatting slots
         /// </summary>
@@ -48,7 +48,7 @@ namespace Nebukam.Cluster
         /// Clusters finite capacity
         /// </summary>
         int Capacity { get; }
-        
+
         /// <summary>
         /// Return the slot index of the given coordinates
         /// </summary>
@@ -63,7 +63,7 @@ namespace Nebukam.Cluster
         /// <param name="location"></param>
         /// <returns></returns>
         bool TryGetCoordOf(float3 location, out ByteTrio coord);
-        
+
         /// <summary>
         /// Gets the slot associated with the specified coordinates.
         /// </summary>
@@ -186,7 +186,7 @@ namespace Nebukam.Cluster
         public B brain
         {
             get { return m_brain; }
-            set { SetBrain( value ); }
+            set { SetBrain(value); }
         }
 
         protected virtual void SetBrain(B value)
@@ -249,7 +249,7 @@ namespace Nebukam.Cluster
         public abstract int Count { get; }
         public abstract V this[int index] { get; }
         public abstract int this[IVertex v] { get; }
-        
+
         /// <summary>
         /// Return the slot index of the given coordinates
         /// </summary>
@@ -269,23 +269,23 @@ namespace Nebukam.Cluster
         }
 
         public virtual void Init(
-            SlotModel clusterSlotModel, 
-            B clusterBrain, 
+            SlotModel clusterSlotModel,
+            B clusterBrain,
             bool fillCluster)
         {
             Clear(true);
 
             m_slotModel = clusterSlotModel;
 
-            SetBrain( clusterBrain );
+            SetBrain(clusterBrain);
 
             if (fillCluster)
                 Fill();
         }
 
         public virtual void Init(
-            SlotModel clusterSlotModel, 
-            ByteTrio clusterSize, 
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
             bool fillCluster)
         {
             Clear(true);
@@ -300,11 +300,11 @@ namespace Nebukam.Cluster
         }
 
         public virtual void Init(
-            SlotModel clusterSlotModel, 
-            ByteTrio clusterSize, 
-            WrapMode wrapX, 
-            WrapMode wrapY, 
-            WrapMode wrapZ, 
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
+            WrapMode wrapX,
+            WrapMode wrapY,
+            WrapMode wrapZ,
             bool fillCluster)
         {
             Clear(true);

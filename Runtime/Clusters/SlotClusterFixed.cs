@@ -178,7 +178,7 @@ namespace Nebukam.Cluster
             V[] oldList = m_slotList;
             m_slotList = new V[newVolume];
 
-            int 
+            int
                 sizeX = oldSize.x,
                 sizeY = oldSize.y,
                 sizeZ = oldSize.z,
@@ -188,7 +188,7 @@ namespace Nebukam.Cluster
                 index;
 
             ByteTrio coord;
-            
+
             for (z = 0; z < sizeZ; z++) // volume
             {
                 for (y = 0; y < sizeY; y++) // plane
@@ -201,7 +201,7 @@ namespace Nebukam.Cluster
                         if (oldSlot == null)
                             continue;
 
-                        coord = new ByteTrio(x,y,z);
+                        coord = new ByteTrio(x, y, z);
                         index = IndexOf(coord); // Index in resized context
 
                         if (index == -1)
@@ -226,8 +226,8 @@ namespace Nebukam.Cluster
         #region init methods
 
         public override void Init(
-            SlotModel clusterSlotModel, 
-            ByteTrio clusterSize, 
+            SlotModel clusterSlotModel,
+            ByteTrio clusterSize,
             bool fillCluster)
         {
             Init(clusterSlotModel, clusterSize, fillCluster, AxisOrder.XYZ);

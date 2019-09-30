@@ -44,7 +44,7 @@ namespace Nebukam.Cluster
             get { return m_cluster; }
             set { m_cluster = value; }
         }
-        
+
         public virtual void CleanUp()
         {
             m_coordinates = ByteTrio.zero;

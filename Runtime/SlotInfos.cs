@@ -18,7 +18,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Unity.Mathematics;
 
 namespace Nebukam.Cluster
 {
@@ -42,7 +41,8 @@ namespace Nebukam.Cluster
             set { i = value; }
         }
 
-        public ByteTrio coord {
+        public ByteTrio coord
+        {
             get { return c; }
             set { c = value; }
         }
