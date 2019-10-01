@@ -271,8 +271,10 @@ namespace Nebukam.Cluster
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
+        [BurstCompile]
         public bool TryGetCoordOf(float3 location, out ByteTrio coord)
         {
+            coord = ByteTrio.zero;
 
             if (!m_bounds.Contains(location))
             {
@@ -320,6 +322,7 @@ namespace Nebukam.Cluster
         /// <param name="coords"></param>
         /// <param name="position"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [BurstCompile]
         public float3 ComputePosition(ref ByteTrio coords)
         {
 

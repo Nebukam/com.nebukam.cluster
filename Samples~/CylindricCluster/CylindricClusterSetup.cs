@@ -33,7 +33,7 @@ public class CylindricClusterSetup : MonoBehaviour
 
     public Transform positionTester;
 
-    protected SlotCluster<Slot, CylindricBrain> m_cluster;
+    protected SlotCluster<Slot, CylinderBrain> m_cluster;
     protected SlotModel m_model = new SlotModel();
 
     private void Awake()
@@ -41,7 +41,7 @@ public class CylindricClusterSetup : MonoBehaviour
         m_model.size = slotSize;
         m_model.anchor = slotAnchor;
 
-        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot, CylindricBrain>>();
+        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot, CylinderBrain>>();
         m_cluster.Init(m_model, size, true);
     }
 
@@ -53,12 +53,14 @@ public class CylindricClusterSetup : MonoBehaviour
         for (int i = 0, count = m_cluster.Count; i < count; i++)
         {
             slot = m_cluster[i];
-            Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius, Color.red);
+            //Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius, Color.red);
+            Nebukam.Utils.Draw.Cube(slot.pos, debugRadius, Color.red);
         }
 
         if (m_cluster.TryGet(positionTester.position, out slot))
         {
-            Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius + 0.1f, Color.green);
+            //Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius + 0.1f, Color.green);
+            Nebukam.Utils.Draw.Cube(slot.pos, debugRadius + 0.1f, Color.green);
         }
     }
 
