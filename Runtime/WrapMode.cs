@@ -23,7 +23,7 @@ namespace Nebukam.Cluster
     public enum WrapMode
     {
         NONE = 0,
-        WRAP = 1,
+        LOOP = 1,
         REPEAT = 2
     }
 
@@ -35,17 +35,17 @@ namespace Nebukam.Cluster
             if (wrapX != WrapMode.NONE)
             {
                 if (@this.x < 0)
-                    @this.x = (byte)(wrapX == WrapMode.WRAP ? bounds.x + (@this.x % bounds.x) : 0);
+                    @this.x = (byte)(wrapX == WrapMode.LOOP ? bounds.x + (@this.x % bounds.x) : 0);
                 else if (@this.x >= bounds.x)
-                    @this.x = (byte)(wrapX == WrapMode.WRAP ? @this.x % bounds.x : bounds.x - 1);
+                    @this.x = (byte)(wrapX == WrapMode.LOOP ? @this.x % bounds.x : bounds.x - 1);
             }
 
             if (wrapY != WrapMode.NONE)
             {
                 if (@this.y < 0)
-                    @this.y = (byte)(wrapY == WrapMode.WRAP ? bounds.y + (@this.y % bounds.y) : 0);
+                    @this.y = (byte)(wrapY == WrapMode.LOOP ? bounds.y + (@this.y % bounds.y) : 0);
                 else if (@this.y >= bounds.y)
-                    @this.y = (byte)(wrapY == WrapMode.WRAP ? @this.y % bounds.y : bounds.y - 1);
+                    @this.y = (byte)(wrapY == WrapMode.LOOP ? @this.y % bounds.y : bounds.y - 1);
             }
 
             return @this;
@@ -56,25 +56,25 @@ namespace Nebukam.Cluster
             if (wrapX != WrapMode.NONE)
             {
                 if (@this.x < 0)
-                    @this.x = (byte)(wrapX == WrapMode.WRAP ? bounds.x + (@this.x % bounds.x) : 0);
+                    @this.x = (byte)(wrapX == WrapMode.LOOP ? bounds.x + (@this.x % bounds.x) : 0);
                 else if (@this.x >= bounds.x)
-                    @this.x = (byte)(wrapX == WrapMode.WRAP ? @this.x % bounds.x : bounds.x - 1);
+                    @this.x = (byte)(wrapX == WrapMode.LOOP ? @this.x % bounds.x : bounds.x - 1);
             }
 
             if (wrapY != WrapMode.NONE)
             {
                 if (@this.y < 0)
-                    @this.y = (byte)(wrapY == WrapMode.WRAP ? bounds.y + (@this.y % bounds.y) : 0);
+                    @this.y = (byte)(wrapY == WrapMode.LOOP ? bounds.y + (@this.y % bounds.y) : 0);
                 else if (@this.y >= bounds.y)
-                    @this.y = (byte)(wrapY == WrapMode.WRAP ? @this.y % bounds.y : bounds.y - 1);
+                    @this.y = (byte)(wrapY == WrapMode.LOOP ? @this.y % bounds.y : bounds.y - 1);
             }
 
             if (wrapZ != WrapMode.NONE)
             {
                 if (@this.z < 0)
-                    @this.z = (byte)(wrapZ == WrapMode.WRAP ? bounds.z + (@this.z % bounds.z) : 0);
+                    @this.z = (byte)(wrapZ == WrapMode.LOOP ? bounds.z + (@this.z % bounds.z) : 0);
                 else if (@this.z >= bounds.y)
-                    @this.z = (byte)(wrapZ == WrapMode.WRAP ? @this.z % bounds.z : bounds.z - 1);
+                    @this.z = (byte)(wrapZ == WrapMode.LOOP ? @this.z % bounds.z : bounds.z - 1);
             }
 
             return @this;

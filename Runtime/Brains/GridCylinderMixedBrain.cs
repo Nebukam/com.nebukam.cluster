@@ -151,25 +151,25 @@ namespace Nebukam.Cluster
             if (m_wrapX != WrapMode.NONE)
             {
                 if (coord.x < 0)
-                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
+                    coord.x = (byte)(m_wrapX == WrapMode.LOOP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
                 else if (coord.x >= m_clusterSize.x)
-                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
+                    coord.x = (byte)(m_wrapX == WrapMode.LOOP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
             }
 
             if (m_wrapY != WrapMode.NONE)
             {
                 if (coord.y < 0)
-                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
+                    coord.y = (byte)(m_wrapY == WrapMode.LOOP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
                 else if (coord.y >= m_clusterSize.y)
-                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
+                    coord.y = (byte)(m_wrapY == WrapMode.LOOP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
             }
 
             if (m_wrapZ != WrapMode.NONE)
             {
                 if (coord.z < 0)
-                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
+                    coord.z = (byte)(m_wrapZ == WrapMode.LOOP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
                 else if (coord.z >= m_clusterSize.y)
-                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
+                    coord.z = (byte)(m_wrapZ == WrapMode.LOOP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
             }
         }
 
@@ -178,25 +178,25 @@ namespace Nebukam.Cluster
             if (m_wrapX != WrapMode.NONE)
             {
                 if (coord.x < 0)
-                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
+                    coord.x = (byte)(m_wrapX == WrapMode.LOOP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0);
                 else if (coord.x >= m_clusterSize.x)
-                    coord.x = (byte)(m_wrapX == WrapMode.WRAP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
+                    coord.x = (byte)(m_wrapX == WrapMode.LOOP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1);
             }
 
             if (m_wrapY != WrapMode.NONE)
             {
                 if (coord.y < 0)
-                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
+                    coord.y = (byte)(m_wrapY == WrapMode.LOOP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0);
                 else if (coord.y >= m_clusterSize.y)
-                    coord.y = (byte)(m_wrapY == WrapMode.WRAP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
+                    coord.y = (byte)(m_wrapY == WrapMode.LOOP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1);
             }
 
             if (m_wrapZ != WrapMode.NONE)
             {
                 if (coord.z < 0)
-                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
+                    coord.z = (byte)(m_wrapZ == WrapMode.LOOP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0);
                 else if (coord.z >= m_clusterSize.y)
-                    coord.z = (byte)(m_wrapZ == WrapMode.WRAP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
+                    coord.z = (byte)(m_wrapZ == WrapMode.LOOP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1);
             }
 
             return coord;
@@ -208,28 +208,86 @@ namespace Nebukam.Cluster
             if (m_wrapX != WrapMode.NONE)
             {
                 if (x < 0)
-                    x = (byte)(m_wrapX == WrapMode.WRAP ? m_clusterSize.x + (x % m_clusterSize.x) : 0);
+                    x = (byte)(m_wrapX == WrapMode.LOOP ? m_clusterSize.x + (x % m_clusterSize.x) : 0);
                 else if (x >= m_clusterSize.x)
-                    x = (byte)(m_wrapX == WrapMode.WRAP ? x % m_clusterSize.x : m_clusterSize.x - 1);
+                    x = (byte)(m_wrapX == WrapMode.LOOP ? x % m_clusterSize.x : m_clusterSize.x - 1);
             }
 
             if (m_wrapY != WrapMode.NONE)
             {
                 if (y < 0)
-                    y = (byte)(m_wrapY == WrapMode.WRAP ? m_clusterSize.y + (y % m_clusterSize.y) : 0);
+                    y = (byte)(m_wrapY == WrapMode.LOOP ? m_clusterSize.y + (y % m_clusterSize.y) : 0);
                 else if (y >= m_clusterSize.y)
-                    y = (byte)(m_wrapY == WrapMode.WRAP ? y % m_clusterSize.y : m_clusterSize.y - 1);
+                    y = (byte)(m_wrapY == WrapMode.LOOP ? y % m_clusterSize.y : m_clusterSize.y - 1);
             }
 
             if (m_wrapZ != WrapMode.NONE)
             {
                 if (z < 0)
-                    z = (byte)(m_wrapZ == WrapMode.WRAP ? m_clusterSize.z + (z % m_clusterSize.z) : 0);
+                    z = (byte)(m_wrapZ == WrapMode.LOOP ? m_clusterSize.z + (z % m_clusterSize.z) : 0);
                 else if (z >= m_clusterSize.y)
-                    z = (byte)(m_wrapZ == WrapMode.WRAP ? z % m_clusterSize.z : m_clusterSize.z - 1);
+                    z = (byte)(m_wrapZ == WrapMode.LOOP ? z % m_clusterSize.z : m_clusterSize.z - 1);
             }
 
             return new ByteTrio(x, y, z);
+        }
+
+        public void Clamp(ref int x, ref int y, ref int z)
+        {
+
+            if (m_wrapX != WrapMode.NONE)
+            {
+                if (x < 0)
+                    x = m_wrapX == WrapMode.LOOP ? m_clusterSize.x + (x % m_clusterSize.x) : 0;
+                else if (x >= m_clusterSize.x)
+                    x = m_wrapX == WrapMode.LOOP ? x % m_clusterSize.x : m_clusterSize.x - 1;
+            }
+
+            if (m_wrapY != WrapMode.NONE)
+            {
+                if (y < 0)
+                    y = m_wrapY == WrapMode.LOOP ? m_clusterSize.y + (y % m_clusterSize.y) : 0;
+                else if (y >= m_clusterSize.y)
+                    y = m_wrapY == WrapMode.LOOP ? y % m_clusterSize.y : m_clusterSize.y - 1;
+            }
+
+            if (m_wrapZ != WrapMode.NONE)
+            {
+                if (z < 0)
+                    z = m_wrapZ == WrapMode.LOOP ? m_clusterSize.z + (z % m_clusterSize.z) : 0;
+                else if (z >= m_clusterSize.y)
+                    z = m_wrapZ == WrapMode.LOOP ? z % m_clusterSize.z : m_clusterSize.z - 1;
+            }
+
+        }
+
+        public void Clamp(ref int3 coord)
+        {
+
+            if (m_wrapX != WrapMode.NONE)
+            {
+                if (coord.x < 0)
+                    coord.x = m_wrapX == WrapMode.LOOP ? m_clusterSize.x + (coord.x % m_clusterSize.x) : 0;
+                else if (coord.x >= m_clusterSize.x)
+                    coord.x = m_wrapX == WrapMode.LOOP ? coord.x % m_clusterSize.x : m_clusterSize.x - 1;
+            }
+
+            if (m_wrapY != WrapMode.NONE)
+            {
+                if (coord.y < 0)
+                    coord.y = m_wrapY == WrapMode.LOOP ? m_clusterSize.y + (coord.y % m_clusterSize.y) : 0;
+                else if (coord.y >= m_clusterSize.y)
+                    coord.y = m_wrapY == WrapMode.LOOP ? coord.y % m_clusterSize.y : m_clusterSize.y - 1;
+            }
+
+            if (m_wrapZ != WrapMode.NONE)
+            {
+                if (coord.z < 0)
+                    coord.z = m_wrapZ == WrapMode.LOOP ? m_clusterSize.z + (coord.z % m_clusterSize.z) : 0;
+                else if (coord.z >= m_clusterSize.y)
+                    coord.z = m_wrapZ == WrapMode.LOOP ? coord.z % m_clusterSize.z : m_clusterSize.z - 1;
+            }
+
         }
 
         public bool Contains(ref ByteTrio coord)
