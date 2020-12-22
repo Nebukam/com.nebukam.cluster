@@ -26,8 +26,21 @@ namespace Nebukam.Cluster
     public interface ISlotInfos<T_SLOT> : IVertexInfos
         where T_SLOT : ISlot
     {
+        /// <summary>
+        /// Slot index in the cluster.
+        /// </summary>
         int index { get; set; }
+        
+        /// <summary>
+        /// Slot local coordinates in the cluster.
+        /// </summary>
         ByteTrio coord { get; set; }
+
+        /// <summary>
+        /// Capture a T_SLOT object's data into this struct.
+        /// Implementation varies depending on the slot.
+        /// </summary>
+        /// <param name="slot"></param>
         void Capture(T_SLOT slot);
     }
 
@@ -38,6 +51,9 @@ namespace Nebukam.Cluster
 
         public float3 m_pos;
 
+        /// <summary>
+        /// Slot position
+        /// </summary>
         public float3 pos
         {
             get { return m_pos; }
@@ -51,18 +67,29 @@ namespace Nebukam.Cluster
         public int i;
         public ByteTrio c;
 
+        /// <summary>
+        /// Slot index in the cluster.
+        /// </summary>
         public int index
         {
             get { return i; }
             set { i = value; }
         }
 
+        /// <summary>
+        /// Slot local coordinates in the cluster.
+        /// </summary>
         public ByteTrio coord
         {
             get { return c; }
             set { c = value; }
         }
 
+        /// <summary>
+        /// Capture a T_SLOT object's data into this struct.
+        /// Implementation varies depending on the slot.
+        /// </summary>
+        /// <param name="slot"></param>
         public void Capture(ISlot slot)
         {
 
