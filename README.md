@@ -19,10 +19,8 @@ It can be used for 1D & 2D structures as well, although given the way to works, 
 ## Hows
 
 ### Installation
-To be used with [Unity's Package Manager](https://docs.unity3d.com/Manual/upm-ui-giturl.html) + [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity).
-
-⚠ [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity) must be installed *before* in order to fetch nested git dependencies.
-{: .alert .alert-danger}
+> To be used with [Unity's Package Manager](https://docs.unity3d.com/Manual/upm-ui-giturl.html).  
+> ⚠ [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity) must be installed *before* in order to fetch nested git dependencies. (See the [Installation troubleshooting](#installation-troubleshooting) if you encounter issues).  
 
 See [Unity's Package Manager : Getting Started](https://docs.unity3d.com/Manual/upm-parts.html)
 
@@ -90,3 +88,11 @@ From there you can :
 - **N:Common** -- [com.nebukam.common](https://github.com/Nebukam/com.nebukam.common.git)
 - **N:JobAssist** -- [com.nebukam.job-assist](https://github.com/Nebukam/com.nebukam.job-assist.git)
 
+---
+## Installation Troubleshooting
+
+After installing this package, Unity may complain about missing namespace references error (effectively located in dependencies). What [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity) does, instead of editing your project's package.json, is create local copies of the git repo *effectively acting as custom local packages*.
+Hence, if you encounter issues, try the following:
+- In the project explorer, do a ```Reimport All``` on the **Packages** folder (located at the same level as **Assets** & **Favorites**). This should do the trick.
+- Delete Library/ScriptAssemblies from you project, then ```Reimport All```.
+- Check the [Resolver usage for users](https://github.com/mob-sakai/GitDependencyResolverForUnity#usage)
