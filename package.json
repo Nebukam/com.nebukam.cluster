@@ -15,11 +15,13 @@
     "url": "https://github.com/Nebukam/com.nebukam.cluster.git"
   },
   "dependencies": {
-	"com.unity.burst": "1.4.3",
-	"com.unity.collections": "0.9.0-preview.6",
-	"com.unity.jobs": "0.2.10-preview.13",
-	"com.unity.mathematics": "1.2.1",
-	"com.nebukam.common": "https://github.com/Nebukam/com.nebukam.common.git#0.0.1",
+    "com.unity.burst": "1.4.3",
+    "com.unity.collections": "0.9.0-preview.6",
+    "com.unity.jobs": "0.2.10-preview.13",
+    "com.unity.mathematics": "1.2.1"
+  },
+  "dependencies": {
+    "com.nebukam.common": "https://github.com/Nebukam/com.nebukam.common.git#0.0.1",
     "com.nebukam.job-assist": "https://github.com/Nebukam/com.nebukam.job-assist.git#1.0.1"
   },
   "samples": [
@@ -28,7 +30,7 @@
       "description": "An example setup. See in editor view, not game view.",
       "path": "Samples~/Setup"
     },
-	{
+    {
       "displayName": "Cylindric Cluster Example",
       "description": "Example of a cylindric ClusterBrain implementation & use.",
       "path": "Samples~/CylindricCluster"
