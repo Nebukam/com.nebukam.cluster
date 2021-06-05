@@ -19,7 +19,10 @@ It can be used for 1D & 2D structures as well, although given the way to works, 
 ## Hows
 
 ### Installation
-To be used with Unity's Package Manager.
+To be used with [Unity's Package Manager](https://docs.unity3d.com/Manual/upm-ui-giturl.html) + [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity) (or any git dependencies resolving package, really).
+
+⚠ [Git Dependency Resolver For Unity](https://github.com/mob-sakai/GitDependencyResolverForUnity) must be installed *before* in order to fetch nested git dependencies.
+{: .alert .alert-danger}
 
 See [Unity's Package Manager : Getting Started](https://docs.unity3d.com/Manual/upm-parts.html)
 
