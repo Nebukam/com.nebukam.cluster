@@ -114,11 +114,8 @@ namespace Nebukam.Cluster
 
         protected override void InternalUnlock() { }
 
-        protected override void Dispose(bool disposing)
+        protected override void InternalDispose()
         {
-            base.Dispose(disposing);
-            if (!disposing) { return; }
-
             m_lockedSlots.Clear();
             m_lockedSlots = null;
 
@@ -126,7 +123,6 @@ namespace Nebukam.Cluster
 
             m_outputSlotInfos.Dispose();
             m_outputSlotCoordMap.Dispose();
-
         }
 
     }
