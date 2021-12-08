@@ -107,13 +107,6 @@ namespace Nebukam.Cluster
 
         }
 
-        protected override void Apply(ref ClusterMappingJob<S, T, B> job)
-        {
-
-        }
-
-        protected override void InternalUnlock() { }
-
         protected override void InternalDispose()
         {
             m_lockedSlots.Clear();
