@@ -29,7 +29,7 @@ namespace Nebukam.Cluster
         float3 size { get; set; }
     }
 
-    public class SlotModel : Nebukam.Pooling.PoolItem, ISlotModel
+    public class SlotModel : PoolItem, ISlotModel
     {
         protected internal float3 m_slotSize = float3(0f);
         protected internal float3 m_anchor = float3(0f);

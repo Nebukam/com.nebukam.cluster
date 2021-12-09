@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Nebukam.Utils;
+using Nebukam.Common;
 using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;

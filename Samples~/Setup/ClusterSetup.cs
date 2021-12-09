@@ -42,7 +42,7 @@ public class ClusterSetup : MonoBehaviour
         m_model.size = slotSize;
         m_model.anchor = slotAnchor;
 
-        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot, ClusterBrain>>();
+        m_cluster = Pool.Rent<SlotClusterFixed<Slot, ClusterBrain>>();
         m_cluster.Init(m_model, size, true);
     }
 

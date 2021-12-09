@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
+using Nebukam.Common;
 
 namespace Nebukam.Cluster
 {

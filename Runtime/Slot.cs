@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Nebukam.Common;
+
 namespace Nebukam.Cluster
 {
 
@@ -27,7 +29,7 @@ namespace Nebukam.Cluster
         ByteTrio coordinates { get; set; }
     }
 
-    public class Slot : Vertex, ISlot, Pooling.IRequireCleanUp
+    public class Slot : Vertex, ISlot, IRequireCleanUp
     {
 
         internal ByteTrio m_coordinates = ByteTrio.zero;

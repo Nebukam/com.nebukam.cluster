@@ -20,6 +20,7 @@
 
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using Nebukam.Common;
 
 namespace Nebukam.Cluster
 {
@@ -358,7 +359,7 @@ namespace Nebukam.Cluster
             if (slot != null)
                 return slot;
 
-            slot = Pooling.Pool.Rent<T_SLOT>();
+            slot = Pool.Rent<T_SLOT>();
             slot.m_coordinates = coord;
             m_slotList[index] = slot;
             OnSlotAdded(slot);

@@ -21,6 +21,7 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using Nebukam.Common;
 
 namespace Nebukam.Cluster
 {
@@ -171,7 +172,7 @@ namespace Nebukam.Cluster
             if (m_slots.TryGetValue(coord, out ISlot dslot))
                 return dslot as T_SLOT;
 
-            T_SLOT slot = Pooling.Pool.Rent<T_SLOT>();
+            T_SLOT slot = Pool.Rent<T_SLOT>();
             slot.m_coordinates = coord;
             m_slotList.Add(slot);
             OnSlotAdded(slot);

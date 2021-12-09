@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using UnityEngine;
 using static Unity.Mathematics.math;
+using Nebukam.Common;
 
 namespace Nebukam.Cluster
 {
@@ -157,7 +158,7 @@ namespace Nebukam.Cluster
     /// Each slot is stored at a given ByteTrio (x, y, z) location
     /// </summary>
     /// <typeparam name="V"></typeparam>
-    public abstract class SlotCluster<V, B> : Vertex, ISlotCluster<V, B>, Pooling.IRequireCleanUp
+    public abstract class SlotCluster<V, B> : Vertex, ISlotCluster<V, B>, IRequireCleanUp
         where V : Slot, ISlot, new()
         where B : struct, IClusterBrain
     {

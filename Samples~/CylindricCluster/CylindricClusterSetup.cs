@@ -41,7 +41,7 @@ public class CylindricClusterSetup : MonoBehaviour
         m_model.size = slotSize;
         m_model.anchor = slotAnchor;
 
-        m_cluster = Nebukam.Pooling.Pool.Rent<SlotClusterFixed<Slot, CylinderBrain>>();
+        m_cluster = Pool.Rent<SlotClusterFixed<Slot, CylinderBrain>>();
         m_cluster.Init(m_model, size, true);
     }
 
