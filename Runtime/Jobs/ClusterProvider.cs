@@ -18,10 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Nebukam.JobAssist;
 using System.Collections.Generic;
 using Unity.Collections;
 
+using Nebukam.JobAssist;
+using static Nebukam.JobAssist.CollectionsUtils;
 
 namespace Nebukam.Cluster
 {
@@ -45,8 +46,8 @@ namespace Nebukam.Cluster
 
         protected ISlotCluster<S, B> m_slotCluster = null;
         protected List<S> m_lockedSlots = new List<S>();
-        protected NativeArray<T> m_outputSlotInfos = new NativeArray<T>(0, Allocator.Persistent);
-        protected NativeHashMap<ByteTrio, int> m_outputSlotCoordMap = new NativeHashMap<ByteTrio, int>(0, Allocator.Persistent);
+        protected NativeArray<T> m_outputSlotInfos = default;
+        protected NativeHashMap<ByteTrio, int> m_outputSlotCoordMap = default;
 
         public ISlotCluster<S, B> slotCluster
         {
@@ -70,18 +71,9 @@ namespace Nebukam.Cluster
 
             int slotCount = m_lockedSlots.Count;
 
-            if (m_outputSlotInfos.Length != slotCount)
-            {
-                m_outputSlotInfos.Dispose();
-                m_outputSlotInfos = new NativeArray<T>(slotCount, Allocator.Persistent);
-
-                m_outputSlotCoordMap.Dispose();
-                m_outputSlotCoordMap = new NativeHashMap<ByteTrio, int>(slotCount, Allocator.Persistent);
-            }
-            else
-            {
+            MakeLength(ref m_outputSlotInfos, slotCount);
+            if(MakeLength(ref m_outputSlotCoordMap, slotCount))
                 m_outputSlotCoordMap.Clear();
-            }
 
             S slot;
             T slotInfos;
@@ -111,7 +103,6 @@ namespace Nebukam.Cluster
         {
             m_lockedSlots.Clear();
             m_lockedSlots = null;
-
             m_slotCluster = null;
 
             m_outputSlotInfos.Dispose();
