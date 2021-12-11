@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 
 using Nebukam.JobAssist;
-using static Nebukam.JobAssist.CollectionsUtils;
+using static Nebukam.JobAssist.Extensions;
 
 namespace Nebukam.Cluster
 {
@@ -105,8 +105,8 @@ namespace Nebukam.Cluster
             m_lockedSlots = null;
             m_slotCluster = null;
 
-            m_outputSlotInfos.Dispose();
-            m_outputSlotCoordMap.Dispose();
+            m_outputSlotInfos.Release();
+            m_outputSlotCoordMap.Release();
         }
 
     }
