@@ -25,7 +25,7 @@ using static Unity.Mathematics.math;
 namespace Nebukam.Cluster
 {
 
-    [CreateAssetMenu(fileName = "SlotModelData", menuName = "Nebukam/Cluster/SlotModelData", order = 1)]
+    [CreateAssetMenu(fileName = "SlotModelData", menuName = "N:Toolkit/Cluster/SlotModelData", order = 1)]
     public class SlotModelData : ScriptableObject
     {
 
