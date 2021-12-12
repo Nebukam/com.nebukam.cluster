@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2021 Timothé Lapetite - nebukam@gmail.com.
+﻿// Copyright (c) 2019 Timothé Lapetite - nebukam@gmail.com.
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,11 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#if UNITY_EDITOR
 
-using Nebukam.Cluster;
 using Unity.Mathematics;
 using UnityEngine;
 using static Unity.Mathematics.math;
+
+using Nebukam;
+using Nebukam.Cluster;
+using Nebukam.Common.Editor;
 
 public class CylindricClusterSetup : MonoBehaviour
 {
@@ -53,14 +57,12 @@ public class CylindricClusterSetup : MonoBehaviour
         for (int i = 0, count = m_cluster.Count; i < count; i++)
         {
             slot = m_cluster[i];
-            //Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius, Color.red);
-            Nebukam.Utils.Draw.Cube(slot.pos, debugRadius, Color.red);
+            Draw.Cube(slot.pos, debugRadius, Color.red);
         }
 
         if (m_cluster.TryGet(positionTester.position, out slot))
         {
-            //Nebukam.Utils.Draw.Cube(slot.pos + slotSize * 0.5f, debugRadius + 0.1f, Color.green);
-            Nebukam.Utils.Draw.Cube(slot.pos, debugRadius + 0.1f, Color.green);
+            Draw.Cube(slot.pos, debugRadius + 0.1f, Color.green);
         }
     }
 
@@ -74,4 +76,5 @@ public class CylindricClusterSetup : MonoBehaviour
         Gizmos.DrawWireCube(b.center, b.size);
     }
 }
+#endif
 
