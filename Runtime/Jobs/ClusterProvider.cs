@@ -29,25 +29,25 @@ namespace Nebukam.Cluster
 
     public interface IClusterProvider<T_SLOT, T_SLOT_INFOS, T_BRAIN> : IProcessor
         where T_SLOT : ISlot
-        where T_SLOT_INFOS : struct, ISlotInfos<T_SLOT>
-        where T_BRAIN : struct, IClusterBrain
+        where T_SLOT_INFOS : unmanaged, ISlotInfos<T_SLOT>
+        where T_BRAIN : unmanaged, IClusterBrain
     {
         ISlotCluster<T_SLOT, T_BRAIN> slotCluster { get; set; }
         List<T_SLOT> lockedSlots { get; }
         NativeArray<T_SLOT_INFOS> outputSlotInfos { get; }
-        NativeHashMap<ByteTrio, int> outputSlotCoordinateMap { get; }
+        NativeParallelHashMap<ByteTrio, int> outputSlotCoordinateMap { get; }
     }
 
     public class ClusterProvider<S, T, B> : Processor<ClusterMappingJob<S, T, B>>, IClusterProvider<S, T, B>
         where S : Slot, ISlot
-        where T : struct, ISlotInfos<S>
-        where B : struct, IClusterBrain
+        where T : unmanaged, ISlotInfos<S>
+        where B : unmanaged, IClusterBrain
     {
 
         protected ISlotCluster<S, B> m_slotCluster = null;
         protected List<S> m_lockedSlots = new List<S>();
         protected NativeArray<T> m_outputSlotInfos = default;
-        protected NativeHashMap<ByteTrio, int> m_outputSlotCoordMap = default;
+        protected NativeParallelHashMap<ByteTrio, int> m_outputSlotCoordMap = default;
 
         public ISlotCluster<S, B> slotCluster
         {
@@ -56,7 +56,7 @@ namespace Nebukam.Cluster
         }
         public List<S> lockedSlots { get { return m_lockedSlots; } }
         public NativeArray<T> outputSlotInfos { get { return m_outputSlotInfos; } }
-        public NativeHashMap<ByteTrio, int> outputSlotCoordinateMap { get { return m_outputSlotCoordMap; } }
+        public NativeParallelHashMap<ByteTrio, int> outputSlotCoordinateMap { get { return m_outputSlotCoordMap; } }
 
         protected override void InternalLock()
         {

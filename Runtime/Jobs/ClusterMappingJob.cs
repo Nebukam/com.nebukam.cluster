@@ -41,7 +41,7 @@ namespace Nebukam.Cluster
         [ReadOnly]
         public T_BRAIN m_brain;
         public NativeArray<T_SLOT_INFOS> m_inputSlotInfos;
-        public NativeHashMap<ByteTrio, int> m_coordinateMap;
+        public NativeParallelHashMap<ByteTrio, int> m_coordinateMap;
 
         public void Execute()
         {
