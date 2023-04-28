@@ -97,3 +97,4 @@ Hence, if you encounter issues, try the following:
 - In the project explorer, do a ```Reimport All``` on the **Packages** folder (located at the same level as **Assets** & **Favorites**). This should do the trick.
 - Delete Library/ScriptAssemblies from you project, then ```Reimport All```.
 - Check the [Resolver usage for users](https://github.com/mob-sakai/GitDependencyResolverForUnity#usage)
+
